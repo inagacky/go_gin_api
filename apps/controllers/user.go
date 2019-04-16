@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"go_gin_sample/apps/models"
+	"github.com/go_gin_sample/apps/models"
 )
 // User is
 type User struct {
