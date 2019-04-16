@@ -1,18 +1,20 @@
 package controllers
 
 import (
-	"go_gin_sample/apps/models"
+	"github.com/go_gin_sample/apps/models"
 )
-// User is
-type User struct {
+
+
+func NewUser() UserController {
+	return UserController{}
 }
-// NewUser ...
-func NewUser() User {
-	return User{}
+
+type UserController struct {
 }
-// Get ...
-func (c User) Get(n int) interface{} {
+
+func (c UserController) Get(id int) interface{} {
 	repo := models.NewUserRepository()
-	user := repo.GetByID(n)
+	user := repo.GetById(id)
+
 	return user
 }
