@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
-
-	//	"strconv"
 )
 type UserController struct {
 }
@@ -20,29 +18,30 @@ var logger  = l.GetLogger()
 func (pc *UserController) GetUser (c *gin.Context) {
 
 	var getUserRequest usecase.GetUserRequest
-	if err := c.ShouldBindUri(&getUserRequest);
+	if err := c.ShouldBindUri(&getUserRequest)
 
 	err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+/*
+		errors := err.(*validator.StructErrors)
+		log.Println("Struct:", errors.Struct)
+		for k, v := range errors.Errors {
+			log.Println("Key:", k)
+			log.Println("Field:", v.Field)
+			log.Println("Param:", v.Param)
+			log.Println("Tag:", v.Tag)
+			log.Println("Kind", v.Kind)
+			log.Println("Type:", v.Type)
+			log.Println("Value", v.Value)
+			log.Println("==========")
+		}
+		*/
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest", "error": err.Error()})
 		return
 	}
-
 	// パラメータ取得
 	n := c.Param("id")
 	id, err := strconv.Atoi(n)
-
-/*
-	if err != nil {
-		logger.Error(err)
-		c.JSON(400, err)
-		return
-	}
-	if id <= 0 {
-		logger.Error(err)
-		c.JSON(400, gin.H{"error": "id should be bigger than 0"})
-		return
-	}
-*/
 
 	// データを処理する
 	var service = s.UserService{}
