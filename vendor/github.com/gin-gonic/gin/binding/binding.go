@@ -35,6 +35,13 @@ type BindingBody interface {
 	BindBody([]byte, interface{}) error
 }
 
+// BindingUri adds BindUri method to Binding. BindUri is similar with Bind,
+// but it read the Params.
+type BindingUri interface {
+	Name() string
+	BindUri(map[string][]string, interface{}) error
+}
+
 // StructValidator is the minimal interface which needs to be implemented in
 // order for it to be used as the validator engine for ensuring the correctness
 // of the reqest. Gin provides a default implementation for this using
@@ -68,6 +75,7 @@ var (
 	FormMultipart = formMultipartBinding{}
 	ProtoBuf      = protobufBinding{}
 	MsgPack       = msgpackBinding{}
+	Uri           = uriBinding{}
 )
 
 // Default returns the appropriate Binding instance based on the HTTP method
