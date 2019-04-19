@@ -9,9 +9,5 @@ type ErrorResponse struct {
 
 const (
 	ErrorCodeRequestValidate = 100
+	ErrorCodeSQL = 200
 )
-
-func NoneErrorResponse() ErrorResponse {
-	errorResponse := ErrorResponse{}
-	return errorResponse
-}

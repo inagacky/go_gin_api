@@ -14,24 +14,54 @@ type UserController struct {
 
 var logger  = l.GetLogger()
 
-// ユーザー取得
+// ユーザー取得API
 func (pc *UserController) GetUser (c *gin.Context) {
 
 	var getUserRequest us.GetUserRequest
-	var commonResponse = usecase.CommonResponse{}
-	if err := c.ShouldBindUri(&getUserRequest)
 
+	commonResponse := &usecase.CommonResponse{}
 	// パラメータのチェック
-	err != nil {
+	if err := c.ShouldBindUri(&getUserRequest); err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
 
-	id, _ := strconv.Atoi(getUserRequest.Id)
+	// int64への変換
+	id, _ := strconv.ParseInt(getUserRequest.Id, 10, 64)
 	// データを処理する
-	var service = s.UserService{}
-	response := service.GetById(id)
+	service := &s.UserService{}
+	user, err := service.GetById(id)
+	if err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
+		return
+	}
 
-	c.JSON(200, commonResponse.CreateSuccessResponse(response))
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.GetUserResponse{User:user}))
+}
+
+
+// ユーザー作成API
+func (pc *UserController) CreateUser (c *gin.Context) {
+
+	var createUserRequest us.CreateUserRequest
+
+	commonResponse := &usecase.CommonResponse{}
+	// パラメータのチェック
+	if err := c.ShouldBindJSON(&createUserRequest); err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
+		return
+	}
+	// データを処理する
+	service := &s.UserService{}
+	user, err := service.CreateUser(createUserRequest.ConvertUserModel())
+	if err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
+		return
+	}
+
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.CreateUserResponse{User:user}))
 }
