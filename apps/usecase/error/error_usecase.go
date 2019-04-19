@@ -10,3 +10,8 @@ type ErrorResponse struct {
 const (
 	ErrorCodeRequestValidate = 100
 )
+
+func NoneErrorResponse() ErrorResponse {
+	errorResponse := ErrorResponse{}
+	return errorResponse
+}

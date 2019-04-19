@@ -5,9 +5,8 @@ import (
 	l "github.com/go_gin_sample/apps/configure/logger"
 	s "github.com/go_gin_sample/apps/domain/service"
 	"github.com/go_gin_sample/apps/usecase"
-	user_usecase "github.com/go_gin_sample/apps/usecase/user"
+	us "github.com/go_gin_sample/apps/usecase/user"
 	"net/http"
-	"reflect"
 	"strconv"
 )
 type UserController struct {
@@ -18,26 +17,21 @@ var logger  = l.GetLogger()
 // ユーザー取得
 func (pc *UserController) GetUser (c *gin.Context) {
 
-	var getUserRequest user_usecase.GetUserRequest
+	var getUserRequest us.GetUserRequest
+	var commonResponse = usecase.CommonResponse{}
 	if err := c.ShouldBindUri(&getUserRequest)
 
+	// パラメータのチェック
 	err != nil {
 		logger.Error(err)
-		c.JSON(http.StatusBadRequest, usecase.CommonResponse{}.CreateValidateErrorResponse(err.Error()))
+		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
-	// パラメータ取得
-	n := c.Param("id")
-	id, err := strconv.Atoi(n)
 
+	id, _ := strconv.Atoi(getUserRequest.Id)
 	// データを処理する
 	var service = s.UserService{}
-	result := service.GetById(id)
+	response := service.GetById(id)
 
-	if result == nil || reflect.ValueOf(result).IsNil() {
-		logger.Error(err)
-		c.JSON(404, gin.H{})
-		return
-	}
-	c.JSON(200, result)
+	c.JSON(200, commonResponse.CreateSuccessResponse(response))
 }

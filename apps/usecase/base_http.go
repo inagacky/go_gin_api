@@ -6,8 +6,8 @@ import (
 
 type CommonResponse struct {
 	Status int `json:"status"`
-	Error e.ErrorResponse `json:"error"`
-	Result struct{} `json:"result"`
+	Error *e.ErrorResponse `json:"error"`
+	Result interface{} `json:"result"`
 }
 
 // バリデートのエラーレスポンスを作成する
@@ -17,7 +17,16 @@ func (re *CommonResponse) CreateValidateErrorResponse(error string) *CommonRespo
 	errorResponse := e.ErrorResponse{}
 	errorResponse.Code = e.ErrorCodeRequestValidate
 	errorResponse.Error = error
-	re.Error = errorResponse
+	re.Error = &errorResponse
+
+	return re
+}
+
+// 正常時のレスポンスを作成する
+func (re *CommonResponse) CreateSuccessResponse(result interface{}) *CommonResponse {
+	re.Status = StatusSuccess
+	re.Result = result
+	re.Error = nil
 
 	return re
 }
