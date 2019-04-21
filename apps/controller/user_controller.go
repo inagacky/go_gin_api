@@ -54,7 +54,7 @@ func (pc *UserController) CreateUser (c *gin.Context) {
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
-	// データを処理する
+	// ユーザー作成
 	service := &s.UserService{}
 	user, err := service.CreateUser(createUserRequest.ConvertUserModel())
 	if err != nil {
