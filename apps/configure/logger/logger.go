@@ -17,6 +17,7 @@ func Init() (*os.File, error) {
 
 	logger.Level = l.InfoLevel
 	logger.ReportCaller = true
+
 	logPath := os.Getenv("GO_GIN_LOG_PATH")
 	if logPath == "" {
 //		logPath = "/Users/d-inagaki/go/src/github.com/go_gin_sample/apps/log"

@@ -104,7 +104,7 @@ func (pc *UserController) DeleteUser (c *gin.Context) {
 	}
 
 	// int64への変換
-	id, _ := strconv.ParseUint(deleteUserRequest.Id, 10 ,64)
+	id, _ := strconv.ParseUint(deleteUserRequest.Id, 10, 64)
 	// ユーザー削除
 	service := &s.UserService{}
 	user, err := service.DeleteUser(id)
@@ -114,5 +114,5 @@ func (pc *UserController) DeleteUser (c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, commonResponse.CreateSuccessResponse(us.DeleteUserResponse{User:user}))
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.DeleteUserResponse{User: user}))
 }

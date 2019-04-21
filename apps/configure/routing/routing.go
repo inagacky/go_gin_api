@@ -8,7 +8,6 @@ import (
 func GetRouting() *gin.Engine {
 
 	r := gin.Default()
-
 	v1 := r.Group("api/v1")
 	{
 		// ユーザー関係のAPI
@@ -21,7 +20,5 @@ func GetRouting() *gin.Engine {
 			u.DELETE("/:id", controller.DeleteUser)
 		}
 	}
-
-
 	return r
 }
