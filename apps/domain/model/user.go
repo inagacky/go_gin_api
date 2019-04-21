@@ -5,18 +5,19 @@ import (
 	"time"
 )
 
-type Common struct {
-	CreatedAt time.Time `json:"createdAt" xorm:"'created_at'"`
-	UpdatedAt time.Time `json:"updatedAt" xorm:"'updated_at'"`
+type CommonModelFields struct {
+	Id          uint64     `gorm:"primary_key" json:"id"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at"`
 }
 
 type User struct {
-	Id        int64 `json:"id" xorm:"'user_id' pk autoincr"`
-	FirstName string `json:"firstName" xorm:"'first_name'"`
-	LastName  string `json:"lastName" xorm:"'last_name'"`
-	Email     string `json:"email" xorm:"'email' not null unique"`
-	Status    int8    `json:"status" xorm:"'status' not null"`
-	Common
+	CommonModelFields
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	Status    uint8  `json:"status"`
 }
 
 const (
