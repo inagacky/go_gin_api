@@ -28,7 +28,7 @@ func (pc *UserController) GetUser (c *gin.Context) {
 	}
 
 	// int64への変換
-	id, _ := strconv.ParseInt(getUserRequest.Id, 10, 64)
+	id, _ := strconv.ParseUint(getUserRequest.Id, 10 ,64)
 	// データを処理する
 	service := &s.UserService{}
 	user, err := service.GetById(id)

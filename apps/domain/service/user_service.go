@@ -10,7 +10,7 @@ var logger  = l.GetLogger()
 type UserService struct {}
 
 // IDを元にレコードを取得します
-func (c *UserService) GetById(id int64) (*model.User, error) {
+func (c *UserService) GetById(id uint64) (*model.User, error) {
 
 	repo := &r.UserRepository{}
 	user, err := repo.FindByUserId(id)
