@@ -40,6 +40,17 @@ type UpdateUserResponse struct {
 	User *model.User `json:"user"`
 }
 
+// ユーザー削除のリクエスト
+type DeleteUserRequest struct {
+	Id string `uri:"id" binding:"number,required,min=1"`
+}
+
+// ユーザー削除のレスポンス
+type DeleteUserResponse struct {
+	User *model.User `json:"user"`
+}
+
+
 
 func (request *CreateUserRequest) ConvertUserModel () *model.User {
 

@@ -18,6 +18,7 @@ func GetRouting() *gin.Engine {
 			u.GET("/:id", controller.GetUser)
 			u.POST("", controller.CreateUser)
 			u.PUT("/:id", controller.UpdateUser)
+			u.DELETE("/:id", controller.DeleteUser)
 		}
 	}
 

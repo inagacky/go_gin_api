@@ -77,3 +77,26 @@ func (c *UserService) UpdateUser(paramUser *model.User) (*model.User, error) {
 
 	return user, err
 }
+
+// Userの削除を行います。
+func (c *UserService) DeleteUser(id uint64) (*model.User, error) {
+
+	repo := &r.UserRepository{}
+	user, existsErr := repo.FindByUserId(id)
+	if existsErr != nil {
+		logger.Error("ユーザーの取得処理でエラーが発生しました。: %v", existsErr)
+		return nil, existsErr
+	}
+
+	if user == nil {
+		msg := "指定されたユーザーが存在しません。"
+		logger.Warn("指定されたユーザーが存在しません。ID: %s", user.Id)
+		return nil, errors.New(msg)
+	}
+
+	// 論理削除
+	user.Status = model.UserStatusInValid
+	user, err := repo.Delete(user)
+
+	return user, err
+}

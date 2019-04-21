@@ -73,3 +73,15 @@ func (c *UserRepository) Update(user *m.User) (*m.User, error) {
 
 	return user, nil
 }
+
+// ユーザー情報を削除します
+func (c *UserRepository) Delete(user *m.User) (*m.User, error) {
+
+	db := db.GetDB()
+	if err := db.Delete(&user).Error; err != nil {
+		logger.Error("ユーザーの削除処理でエラーが発生しました: %v", err)
+		return nil, err
+	}
+
+	return user, nil
+}

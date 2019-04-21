@@ -28,7 +28,7 @@ func (pc *UserController) GetUser (c *gin.Context) {
 
 	// int64への変換
 	id, _ := strconv.ParseUint(getUserRequest.Id, 10 ,64)
-	// データを処理する
+	// ユーザー取得
 	service := &s.UserService{}
 	user, err := service.GetById(id)
 	if err != nil {
@@ -89,4 +89,30 @@ func (pc *UserController) UpdateUser (c *gin.Context) {
 	}
 
 	c.JSON(200, commonResponse.CreateSuccessResponse(us.CreateUserResponse{User:user}))
+}
+
+// ユーザー削除API
+func (pc *UserController) DeleteUser (c *gin.Context) {
+
+	var deleteUserRequest us.DeleteUserRequest
+	commonResponse := &usecase.CommonResponse{}
+	// パラメータのチェック
+	if err := c.ShouldBindUri(&deleteUserRequest); err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
+		return
+	}
+
+	// int64への変換
+	id, _ := strconv.ParseUint(deleteUserRequest.Id, 10 ,64)
+	// ユーザー削除
+	service := &s.UserService{}
+	user, err := service.DeleteUser(id)
+	if err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
+		return
+	}
+
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.DeleteUserResponse{User:user}))
 }
