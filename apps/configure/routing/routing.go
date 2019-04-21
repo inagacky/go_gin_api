@@ -2,17 +2,23 @@ package routing
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go_gin_sample/apps/controller"
+	co "github.com/go_gin_sample/apps/controller"
 )
 
 func GetRouting() *gin.Engine {
 
 	r := gin.Default()
-	u := r.Group("/users")
+	v1 := r.Group("api/v1")
 	{
-		ctrl := user.Controller{}
-		u.GET("/:id", ctrl.GetUser)
+		// ユーザー関係のAPI
+		u := v1.Group("/users")
+		{
+			controller :=  co.UserController{}
+			u.GET("/:id", controller.GetUser)
+			u.POST("", controller.CreateUser)
+			u.PUT("/:id", controller.UpdateUser)
+			u.DELETE("/:id", controller.DeleteUser)
+		}
 	}
-
 	return r
 }
