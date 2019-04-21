@@ -18,7 +18,6 @@ var logger  = l.GetLogger()
 func (pc *UserController) GetUser (c *gin.Context) {
 
 	var getUserRequest us.GetUserRequest
-
 	commonResponse := &usecase.CommonResponse{}
 	// パラメータのチェック
 	if err := c.ShouldBindUri(&getUserRequest); err != nil {
@@ -57,6 +56,32 @@ func (pc *UserController) CreateUser (c *gin.Context) {
 	// ユーザー作成
 	service := &s.UserService{}
 	user, err := service.CreateUser(createUserRequest.ConvertUserModel())
+	if err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
+		return
+	}
+
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.CreateUserResponse{User:user}))
+}
+
+// ユーザー情報更新API
+func (pc *UserController) UpdateUser (c *gin.Context) {
+
+	var updateUserRequest us.UpdateUserRequest
+	commonResponse := &usecase.CommonResponse{}
+
+	updateUserRequest.Id = c.Param("id")
+	// パラメータのチェック
+	if err := c.ShouldBindJSON(&updateUserRequest); err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
+		return
+	}
+
+	// ユーザー更新
+	service := &s.UserService{}
+	user, err := service.UpdateUser(updateUserRequest.ConvertUserModel())
 	if err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))

@@ -41,3 +41,39 @@ func (c *UserService) CreateUser(user *model.User) (*model.User, error) {
 
 	return user, err
 }
+
+// Userの更新を行います。
+func (c *UserService) UpdateUser(paramUser *model.User) (*model.User, error) {
+
+	repo := &r.UserRepository{}
+	user, existsErr := repo.FindByUserId(paramUser.Id)
+	if existsErr != nil {
+		logger.Error("ユーザーの取得処理でエラーが発生しました。: %v", existsErr)
+		return nil, existsErr
+	}
+
+	if user == nil {
+		msg := "指定されたユーザーが存在しません。"
+		logger.Warn("指定されたユーザーが存在しません。ID: %s", user.Id)
+		return nil, errors.New(msg)
+	}
+
+	// 同一メールアドレスのチェック
+	emailUser, emailErr := repo.FindByEmail(paramUser.Email)
+	if emailErr != nil {
+		logger.Error("ユーザーの取得処理でエラーが発生しました。: %v", emailErr)
+		return nil, emailErr
+	}
+
+	if emailUser != nil && emailUser.Id != user.Id {
+		msg := "指定されたメールアドレスのユーザーは既に存在します。"
+		logger.Warn("該当メールアドレスのユーザーは既に存在します。: %s", emailUser.Email)
+		return nil, errors.New(msg)
+	}
+
+	// 値のコピー
+	user.ValueCopy(paramUser)
+	user, err := repo.Update(user)
+
+	return user, err
+}
