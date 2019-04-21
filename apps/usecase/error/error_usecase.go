@@ -9,4 +9,5 @@ type ErrorResponse struct {
 
 const (
 	ErrorCodeRequestValidate = 100
+	ErrorCodeSQL = 200
 )

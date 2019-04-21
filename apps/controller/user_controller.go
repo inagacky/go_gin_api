@@ -5,9 +5,8 @@ import (
 	l "github.com/go_gin_sample/apps/configure/logger"
 	s "github.com/go_gin_sample/apps/domain/service"
 	"github.com/go_gin_sample/apps/usecase"
-	user_usecase "github.com/go_gin_sample/apps/usecase/user"
+	us "github.com/go_gin_sample/apps/usecase/user"
 	"net/http"
-	"reflect"
 	"strconv"
 )
 type UserController struct {
@@ -15,29 +14,54 @@ type UserController struct {
 
 var logger  = l.GetLogger()
 
-// ユーザー取得
+// ユーザー取得API
 func (pc *UserController) GetUser (c *gin.Context) {
 
-	var getUserRequest user_usecase.GetUserRequest
-	if err := c.ShouldBindUri(&getUserRequest)
+	var getUserRequest us.GetUserRequest
 
-	err != nil {
+	commonResponse := &usecase.CommonResponse{}
+	// パラメータのチェック
+	if err := c.ShouldBindUri(&getUserRequest); err != nil {
 		logger.Error(err)
-		c.JSON(http.StatusBadRequest, usecase.CommonResponse{}.CreateValidateErrorResponse(err.Error()))
+		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
-	// パラメータ取得
-	n := c.Param("id")
-	id, err := strconv.Atoi(n)
 
+	// int64への変換
+	id, _ := strconv.ParseInt(getUserRequest.Id, 10, 64)
 	// データを処理する
-	var service = s.UserService{}
-	result := service.GetById(id)
-
-	if result == nil || reflect.ValueOf(result).IsNil() {
+	service := &s.UserService{}
+	user, err := service.GetById(id)
+	if err != nil {
 		logger.Error(err)
-		c.JSON(404, gin.H{})
+		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
 		return
 	}
-	c.JSON(200, result)
+
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.GetUserResponse{User:user}))
+}
+
+
+// ユーザー作成API
+func (pc *UserController) CreateUser (c *gin.Context) {
+
+	var createUserRequest us.CreateUserRequest
+
+	commonResponse := &usecase.CommonResponse{}
+	// パラメータのチェック
+	if err := c.ShouldBindJSON(&createUserRequest); err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
+		return
+	}
+	// データを処理する
+	service := &s.UserService{}
+	user, err := service.CreateUser(createUserRequest.ConvertUserModel())
+	if err != nil {
+		logger.Error(err)
+		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
+		return
+	}
+
+	c.JSON(200, commonResponse.CreateSuccessResponse(us.CreateUserResponse{User:user}))
 }
