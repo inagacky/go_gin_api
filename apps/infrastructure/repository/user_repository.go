@@ -5,6 +5,7 @@ import (
 	l "github.com/go_gin_sample/apps/configure/logger"
 	m "github.com/go_gin_sample/apps/domain/model"
 	"github.com/jinzhu/gorm"
+	"time"
 )
 var logger  = l.GetLogger()
 
@@ -18,10 +19,10 @@ func (c *UserRepository) FindByUserId(id uint64) (*m.User, error) {
 	db := db.GetDB()
 	if err := db.First(&user).Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			logger.Error("ユーザーの取得処理でエラーが発生しました: %v", err)
+			logger.Error("ユーザーの取得処理でエラーが発生しました: ", err)
 			return nil, err
 		} else {
-			logger.Info("ユーザーが存在しません。ID: %s", id)
+			logger.Info("ユーザーが存在しません。ID: ", id)
 			return nil, nil
 		}
 	}
@@ -39,10 +40,10 @@ func (c *UserRepository) FindByEmail(email string) (*m.User, error) {
 	// Emailを元にユーザー取得
 	if err := db.First(&user).Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
-			logger.Error("ユーザーの取得処理でエラーが発生しました: %v", err)
+			logger.Error("ユーザーの取得処理でエラーが発生しました: ", err)
 			return nil, err
 		} else {
-			logger.Info("ユーザーが存在しません。: %s", email)
+			logger.Info("ユーザーが存在しません。: ", email)
 			return nil, nil
 		}
 	}
@@ -55,7 +56,7 @@ func (c *UserRepository) Save(user *m.User) (*m.User, error) {
 
 	db := db.GetDB()
 	if err := db.Create(&user).Error; err != nil {
-		logger.Error("ユーザーの作成処理でエラーが発生しました: %v", err)
+		logger.Error("ユーザーの作成処理でエラーが発生しました: ", err)
 		return nil, err
 	}
 
@@ -67,7 +68,24 @@ func (c *UserRepository) Update(user *m.User) (*m.User, error) {
 
 	db := db.GetDB()
 	if err := db.Save(&user).Error; err != nil {
-		logger.Error("ユーザーの更新処理でエラーが発生しました: %v", err)
+		logger.Error("ユーザーの更新処理でエラーが発生しました: ", err)
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// ユーザー情報を削除します
+func (c *UserRepository) Delete(user *m.User) (*m.User, error) {
+
+	db := db.GetDB()
+	// 論理削除
+	user.Status = m.UserStatusInValid
+	current := time.Now()
+	user.DeletedAt = &current
+
+	if err := db.Save(&user).Error; err != nil {
+		logger.Error("ユーザーの削除処理でエラーが発生しました: ", err)
 		return nil, err
 	}
 
