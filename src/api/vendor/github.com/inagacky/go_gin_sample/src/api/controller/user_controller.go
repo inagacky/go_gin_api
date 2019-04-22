@@ -19,8 +19,6 @@ func (pc *UserController) GetUser (c *gin.Context) {
 
 	var getUserRequest us.GetUserRequest
 	commonResponse := &usecase.CommonResponse{}
-	getUserRequest.Id = c.Param("id")
-
 	// パラメータのチェック
 	if err := c.Bind(&getUserRequest); err != nil {
 		logger.Error(err)

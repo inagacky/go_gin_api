@@ -5,6 +5,13 @@ services:
     container_name: go_gin_sample_app
     ports:
       - 8080:8080
+      - 2345:2345
+    volumes:
+      - ./src:/go/src/github.com/inagacky/go_gin_sample/src
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
     environment:
       GOPATH: "/go"
     restart: unless-stopped
