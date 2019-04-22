@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"github.com/go_gin_sample/apps/configure/db"
-	l "github.com/go_gin_sample/apps/configure/logger"
-	m "github.com/go_gin_sample/apps/domain/model"
+	"github.com/inagacky/go_gin_sample/src/api/configure/db"
+	l "github.com/inagacky/go_gin_sample/src/api/configure/logger"
+	m "github.com/inagacky/go_gin_sample/src/api/domain/model"
 	"github.com/jinzhu/gorm"
 	"time"
 )

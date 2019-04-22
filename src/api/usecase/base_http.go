@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	e "github.com/go_gin_sample/apps/usecase/error"
+	e "github.com/inagacky/go_gin_sample/src/api/usecase/error"
 )
 
 type CommonResponse struct {

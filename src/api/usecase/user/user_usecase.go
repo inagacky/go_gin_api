@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/go_gin_sample/apps/domain/model"
+	"github.com/inagacky/go_gin_sample/src/api/domain/model"
 	"strconv"
 )
 

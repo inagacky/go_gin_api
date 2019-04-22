@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	l "github.com/go_gin_sample/apps/configure/logger"
-	s "github.com/go_gin_sample/apps/domain/service"
-	"github.com/go_gin_sample/apps/usecase"
-	us "github.com/go_gin_sample/apps/usecase/user"
+	l "github.com/inagacky/go_gin_sample/src/api/configure/logger"
+	s "github.com/inagacky/go_gin_sample/src/api/domain/service"
+	"github.com/inagacky/go_gin_sample/src/api/usecase"
+	us "github.com/inagacky/go_gin_sample/src/api/usecase/user"
 	"net/http"
 	"strconv"
 )
@@ -20,7 +20,7 @@ func (pc *UserController) GetUser (c *gin.Context) {
 	var getUserRequest us.GetUserRequest
 	commonResponse := &usecase.CommonResponse{}
 	// パラメータのチェック
-	if err := c.ShouldBindUri(&getUserRequest); err != nil {
+	if err := c.Bind(&getUserRequest); err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
@@ -97,7 +97,7 @@ func (pc *UserController) DeleteUser (c *gin.Context) {
 	var deleteUserRequest us.DeleteUserRequest
 	commonResponse := &usecase.CommonResponse{}
 	// パラメータのチェック
-	if err := c.ShouldBindUri(&deleteUserRequest); err != nil {
+	if err := c.Bind(&deleteUserRequest); err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return

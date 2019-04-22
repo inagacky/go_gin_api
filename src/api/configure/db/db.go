@@ -13,7 +13,7 @@ func Init() {
 	var err error
 
 	// データソースの定義
-	dataSource := "root:sample@tcp(127.0.0.1:33006)/sample?parseTime=true&charset=utf8"
+	dataSource := "root:sample@tcp(go_gin_sample_db:3306)/sample?parseTime=true&charset=utf8"
 	db, err = gorm.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatalf("データベースの接続に失敗しました。: %v", err)

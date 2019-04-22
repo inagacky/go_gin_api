@@ -516,15 +516,6 @@ func (c *Context) BindQuery(obj interface{}) error {
 	return c.MustBindWith(obj, binding.Query)
 }
 
-// ShouldBindUri binds the passed struct pointer using the specified binding engine.
-func (c *Context) ShouldBindUri(obj interface{}) error {
-	m := make(map[string][]string)
-	for _, v := range c.Params {
-		m[v.Key] = []string{v.Value}
-	}
-	return binding.Uri.BindUri(m, obj)
-}
-
 // MustBindWith binds the passed struct pointer using the specified binding engine.
 // It will abort the request with HTTP 400 if any error ocurrs.
 // See the binding package.
@@ -570,12 +561,9 @@ func (c *Context) ShouldBindWith(obj interface{}, b binding.Binding) error {
 //
 // NOTE: This method reads the body before binding. So you should use
 // ShouldBindWith for better performance if you need to call only once.
-
-//func (c *Context) ShouldBindBodyWith(
-//	obj interface{}, bb binding.BindingBody,
-//) (err error)
-func (c *Context) ShouldBindBodyWith(obj interface{}, bb binding.BindingBody) (err error) {
-
+func (c *Context) ShouldBindBodyWith(
+	obj interface{}, bb binding.BindingBody,
+) (err error) {
 	var body []byte
 	if cb, ok := c.Get(BodyBytesKey); ok {
 		if cbb, ok := cb.([]byte); ok {

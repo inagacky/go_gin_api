@@ -1,19 +1,36 @@
 version: '3'
 services:
-  go_graphql_app_db:
-    build: ./db/go_graphql_app_db 
-    container_name: go_graphql_app_db
+  go_gin_sample_app:
+    build: src
+    container_name: go_gin_sample_app
+    ports:
+      - 8080:8080
+    environment:
+      GOPATH: "/go"
+    restart: unless-stopped
+    networks:
+      - go_gin_sample_net
+
+  go_gin_sample_db:
+    build: db/go_gin_sample_db
+    container_name: go_gin_sample_db
     ports:
       - 33006:3306
     volumes:
-      - mysql-go-graphql-app-data:/var/lib/mysql
-      - ./db/go_graphql_app_db/initdb.d:/docker-entrypoint-initdb.d
+      - mysql-go-gin-sample-app-data:/var/lib/mysql
+      - ./db/go_gin_sample_db/initdb.d:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: sample
       MYSQL_APP_USER: sample
       MYSQL_APP_USER_PASSWORD: sample
       MYSQL_DATABASE: sample 
     restart: unless-stopped
+    networks:
+      - go_gin_sample_net
 volumes:
-  mysql-go-graphql-app-data:
+  mysql-go-gin-sample-app-data:
     driver: local
+
+networks:
+  go_gin_sample_net:
+    driver: bridge
