@@ -21,6 +21,10 @@ func (pc *UserController) GetUser (c *gin.Context) {
 	commonResponse := &usecase.CommonResponse{}
 	getUserRequest.Id = c.Param("id")
 
+
+	id2 := c.Param("id")
+	print(id2)
+
 	// パラメータのチェック
 	if err := c.Bind(&getUserRequest); err != nil {
 		logger.Error(err)
@@ -98,6 +102,8 @@ func (pc *UserController) DeleteUser (c *gin.Context) {
 
 	var deleteUserRequest us.DeleteUserRequest
 	commonResponse := &usecase.CommonResponse{}
+	deleteUserRequest.Id = c.Param("id")
+
 	// パラメータのチェック
 	if err := c.Bind(&deleteUserRequest); err != nil {
 		logger.Error(err)

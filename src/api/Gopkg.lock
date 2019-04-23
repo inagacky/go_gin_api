@@ -37,25 +37,6 @@
   revision = "5a0f697c9ed9d68fef0116532c6e05cfeae00e55"
 
 [[projects]]
-  branch = "feature/docker-container"
-  digest = "1:f37917ebf725580157df77de5adc722365288ffcbad3110b7276fec8a5e2c648"
-  name = "github.com/inagacky/go_gin_sample"
-  packages = [
-    "src/api/configure/db",
-    "src/api/configure/logger",
-    "src/api/configure/routing",
-    "src/api/controller",
-    "src/api/domain/model",
-    "src/api/domain/service",
-    "src/api/infrastructure/repository",
-    "src/api/usecase",
-    "src/api/usecase/error",
-    "src/api/usecase/user",
-  ]
-  pruneopts = "UT"
-  revision = "9cfd2bbe0891a7e893f2ca8b3408a7911dbcdd10"
-
-[[projects]]
   digest = "1:8b04597fc0136553ba2055503a557df76e2df848fe2fc67c5b9c9fa2fc2e8857"
   name = "github.com/jinzhu/gorm"
   packages = [
