@@ -5,13 +5,6 @@ services:
     container_name: go_gin_sample_app
     ports:
       - 8080:8080
-      - 2345:2345
-    volumes:
-      - ./src:/go/src/github.com/inagacky/go_gin_sample/src
-    security_opt:
-      - apparmor:unconfined
-    cap_add:
-      - SYS_PTRACE
     environment:
       GOPATH: "/go"
       GO_GIN_SAMPLE_DB_USER: root
@@ -19,7 +12,7 @@ services:
       GO_GIN_SAMPLE_DB_NAME: sample
       GO_GIN_SAMPLE_DB_HOSTNAME: go_gin_sample_db
       GO_GIN_SAMPLE_DB_PORT: 3306
-      GO_GIN_SAMPLE_LOG_PATH: "/log"
+      GO_GIN_SAMPLE_LOG_PATH: "/go/src/github.com/inagacky/go_gin_sample/log"
     restart: unless-stopped
     networks:
       - go_gin_sample_net
