@@ -49,6 +49,7 @@ out
 build
 bin
 
+pkg/
 # Other
 *.log
 *.log.*
