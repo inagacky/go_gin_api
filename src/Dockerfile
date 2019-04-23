@@ -20,15 +20,15 @@ RUN apt-get update \
   && dep ensure
 
 # debug
-RUN go get github.com/derekparker/delve/cmd/dlv
+# RUN go get github.com/derekparker/delve/cmd/dlv
 # ホットリロード
 # RUN go get github.com/oxequa/realize
 
 EXPOSE 8080
 
 #RUN go build -gcflags "all=-N -l" -o /server main.go
-# RUN realize start --run --no-config
+#RUN realize start --run --no-config
 
-CMD ["/bin/sh", "run_dev.sh"]
+CMD ["go", "run", "main.go"]
 #CMD ["dlv", "--listen=:2345", "--headless=true", "--api-version=2", "exec", "/server"]"
 #CMD ["dlv", "debug", "--listen=:2345", "--headless=true", "--api-version=2", "main.go"]"

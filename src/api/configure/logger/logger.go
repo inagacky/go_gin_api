@@ -1,11 +1,12 @@
 package logger
 
 import (
+	"github.com/inagacky/go_gin_sample/src/api/util"
 	l "github.com/sirupsen/logrus"
 	"os"
 )
 const (
-	logFileName = "output.log"
+	logFileName = "go_sample_output.log"
 )
 
 var logger = l.New()
@@ -18,11 +19,8 @@ func Init() (*os.File, error) {
 	logger.Level = l.InfoLevel
 	logger.ReportCaller = true
 
-	logPath := os.Getenv("GO_GIN_LOG_PATH")
-	if logPath == "" {
-//		logPath = "/Users/d-inagaki/go/src/github.com/go_gin_sample/apps/log"
-		logPath = "/Users/daisuke/go/src/github.com/go_gin_sample/apps/log"
-	}
+	// 環境変数から取得
+	logPath := util.Getenv("GO_GIN_SAMPLE_LOG_PATH", "/Users/daisuke/go/src/github.com/inagacky/go_gin_sample/apps/log")
 
 	// ログファイルの作成・追記の準備
 	logfile, err := os.OpenFile(logPath + "/" + logFileName, os.O_WRONLY|os.O_CREATE, 0664)

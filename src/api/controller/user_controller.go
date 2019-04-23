@@ -21,10 +21,6 @@ func (pc *UserController) GetUser (c *gin.Context) {
 	commonResponse := &usecase.CommonResponse{}
 	getUserRequest.Id = c.Param("id")
 
-
-	id2 := c.Param("id")
-	print(id2)
-
 	// パラメータのチェック
 	if err := c.Bind(&getUserRequest); err != nil {
 		logger.Error(err)
