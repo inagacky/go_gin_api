@@ -9,10 +9,25 @@ import (
 )
 var logger  = l.GetLogger()
 
-type UserRepository struct {}
+type UserRepository interface {
+	FindByUserId(id uint64) (*m.User, error)
+	FindByEmail(email string) (*m.User, error)
+	Save(user *m.User) (*m.User, error)
+	Update(user *m.User) (*m.User, error)
+	Delete(user *m.User) (*m.User, error)
+}
+
+type userRepository struct {
+}
+
+func NewUserRepository(db *gorm.DB) UserRepository {
+	return &userRepository{
+	}
+}
+
 
 // IDを元にユーザーを取得します
-func (c *UserRepository) FindByUserId(id uint64) (*m.User, error) {
+func (c *userRepository) FindByUserId(id uint64) (*m.User, error) {
 
 	var user = m.User{}
 	user.Id = id
@@ -31,7 +46,7 @@ func (c *UserRepository) FindByUserId(id uint64) (*m.User, error) {
 }
 
 // Emailを元にユーザーの取得を行います。
-func (c *UserRepository) FindByEmail(email string) (*m.User, error) {
+func (c *userRepository) FindByEmail(email string) (*m.User, error) {
 
 	var user = m.User{}
 	user.Email = email
@@ -52,7 +67,7 @@ func (c *UserRepository) FindByEmail(email string) (*m.User, error) {
 }
 
 // ユーザー情報を作成します
-func (c *UserRepository) Save(user *m.User) (*m.User, error) {
+func (c *userRepository) Save(user *m.User) (*m.User, error) {
 
 	db := db.GetDB()
 	if err := db.Create(&user).Error; err != nil {
@@ -64,7 +79,7 @@ func (c *UserRepository) Save(user *m.User) (*m.User, error) {
 }
 
 // ユーザー情報を更新します
-func (c *UserRepository) Update(user *m.User) (*m.User, error) {
+func (c *userRepository) Update(user *m.User) (*m.User, error) {
 
 	db := db.GetDB()
 	if err := db.Save(&user).Error; err != nil {
@@ -76,7 +91,7 @@ func (c *UserRepository) Update(user *m.User) (*m.User, error) {
 }
 
 // ユーザー情報を削除します
-func (c *UserRepository) Delete(user *m.User) (*m.User, error) {
+func (c *userRepository) Delete(user *m.User) (*m.User, error) {
 
 	db := db.GetDB()
 	// 論理削除

@@ -9,13 +9,22 @@ import (
 	"net/http"
 	"strconv"
 )
-type UserController struct {
+
+type UserController interface {
+	GetUser (c *gin.Context)
+	CreateUser (c *gin.Context)
+	UpdateUser (c *gin.Context)
+	DeleteUser (c *gin.Context)
+}
+
+type userController struct {
+	userService s.UserService
 }
 
 var logger  = l.GetLogger()
 
 // ユーザー取得API
-func (pc *UserController) GetUser (c *gin.Context) {
+func (co *userController) GetUser (c *gin.Context) {
 
 	var getUserRequest us.GetUserRequest
 	commonResponse := &usecase.CommonResponse{}
@@ -31,8 +40,7 @@ func (pc *UserController) GetUser (c *gin.Context) {
 	// int64への変換
 	id, _ := strconv.ParseUint(getUserRequest.Id, 10 ,64)
 	// ユーザー取得
-	service := &s.UserService{}
-	user, err := service.GetById(id)
+	user, err := co.userService.GetById(id)
 	if err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
@@ -44,7 +52,7 @@ func (pc *UserController) GetUser (c *gin.Context) {
 
 
 // ユーザー作成API
-func (pc *UserController) CreateUser (c *gin.Context) {
+func (co *userController) CreateUser (c *gin.Context) {
 
 	var createUserRequest us.CreateUserRequest
 
@@ -56,8 +64,7 @@ func (pc *UserController) CreateUser (c *gin.Context) {
 		return
 	}
 	// ユーザー作成
-	service := &s.UserService{}
-	user, err := service.CreateUser(createUserRequest.ConvertUserModel())
+	user, err := co.userService.CreateUser(createUserRequest.ConvertUserModel())
 	if err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
@@ -68,7 +75,7 @@ func (pc *UserController) CreateUser (c *gin.Context) {
 }
 
 // ユーザー情報更新API
-func (pc *UserController) UpdateUser (c *gin.Context) {
+func (co *userController) UpdateUser (c *gin.Context) {
 
 	var updateUserRequest us.UpdateUserRequest
 	commonResponse := &usecase.CommonResponse{}
@@ -82,8 +89,7 @@ func (pc *UserController) UpdateUser (c *gin.Context) {
 	}
 
 	// ユーザー更新
-	service := &s.UserService{}
-	user, err := service.UpdateUser(updateUserRequest.ConvertUserModel())
+	user, err := co.userService.UpdateUser(updateUserRequest.ConvertUserModel())
 	if err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
@@ -94,7 +100,7 @@ func (pc *UserController) UpdateUser (c *gin.Context) {
 }
 
 // ユーザー削除API
-func (pc *UserController) DeleteUser (c *gin.Context) {
+func (co *userController) DeleteUser (c *gin.Context) {
 
 	var deleteUserRequest us.DeleteUserRequest
 	commonResponse := &usecase.CommonResponse{}
@@ -110,8 +116,7 @@ func (pc *UserController) DeleteUser (c *gin.Context) {
 	// int64への変換
 	id, _ := strconv.ParseUint(deleteUserRequest.Id, 10, 64)
 	// ユーザー削除
-	service := &s.UserService{}
-	user, err := service.DeleteUser(id)
+	user, err := co.userService.DeleteUser(id)
 	if err != nil {
 		logger.Error(err)
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
