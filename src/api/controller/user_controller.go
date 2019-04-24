@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	l "github.com/inagacky/go_gin_sample/src/api/configure/logger"
-	s "github.com/inagacky/go_gin_sample/src/api/domain/service"
-	"github.com/inagacky/go_gin_sample/src/api/usecase"
-	us "github.com/inagacky/go_gin_sample/src/api/usecase/user"
+	l "github.com/inagacky/go_gin_api/src/api/configure/logger"
+	s "github.com/inagacky/go_gin_api/src/api/domain/service"
+	"github.com/inagacky/go_gin_api/src/api/usecase"
+	us "github.com/inagacky/go_gin_api/src/api/usecase/user"
 	"net/http"
 	"strconv"
 )

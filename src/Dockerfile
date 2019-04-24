@@ -5,9 +5,9 @@ MAINTAINER inagacky
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-COPY api /go/src/github.com/inagacky/go_gin_sample/src/api
-RUN mkdir -p /go/src/github.com/inagacky/go_gin_sample/log
-WORKDIR /go/src/github.com/inagacky/go_gin_sample/src/api
+COPY api /go/src/github.com/inagacky/go_gin_api/src/api
+RUN mkdir -p /go/src/github.com/inagacky/go_gin_api/log
+WORKDIR /go/src/github.com/inagacky/go_gin_api/src/api
 
 RUN apt-get update \
   && apt-get install -y git \

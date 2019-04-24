@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/inagacky/go_gin_sample/src/api/util"
+	"github.com/inagacky/go_gin_api/src/api/util"
 	//	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -14,11 +14,11 @@ func Init() {
 	var err error
 
 	// 環境変数から取得
-	dbUser := util.Getenv("GO_GIN_SAMPLE_DB_USER", "root")
-	dbPass := util.Getenv("GO_GIN_SAMPLE_DB_PASS", "sample")
-	dbName := util.Getenv("GO_GIN_SAMPLE_DB_NAME", "sample")
-	dbHostName := util.Getenv("GO_GIN_SAMPLE_DB_HOSTNAME", "127.0.0.1")
-	dbPort := util.Getenv("GO_GIN_SAMPLE_DB_PORT", "3306")
+	dbUser := util.Getenv("go_gin_api_DB_USER", "root")
+	dbPass := util.Getenv("go_gin_api_DB_PASS", "sample")
+	dbName := util.Getenv("go_gin_api_DB_NAME", "sample")
+	dbHostName := util.Getenv("go_gin_api_DB_HOSTNAME", "127.0.0.1")
+	dbPort := util.Getenv("go_gin_api_DB_PORT", "3306")
 	protocol := "tcp("+dbHostName+":"+dbPort+")"
 
 	// データソースの定義
