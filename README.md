@@ -20,7 +20,6 @@
 |8080|APIアプリケーション(Docker)|
 |3306|Mysql(Docker)|
 
-
 ## API定義
 ・現状、下記のAPIを作成しています。
 * ユーザー取得API
@@ -28,8 +27,12 @@
 * ユーザー更新API
 * ユーザー削除API
 
-エンドポイント等の説明は下記を参照してください。  
+## ドキュメント
+
+#### API定義書
 [API定義](https://github.com/inagacky/go_gin_sample/blob/master/docs/api/api_design.md)
+#### DB定義書
+[DB定義書](https://github.com/inagacky/go_gin_sample/blob/master/docs/db/database_design.md)
 
 ## プログラム使用方法
 Dockerコンテナとして起動します。
@@ -157,6 +160,3 @@ curl -X GET "http://localhost:8080/api/v1/users/6" | jq .
 ## DB
 DBはmysql8.0を使用しています。  
 Dockerコンテナとして起動します。
-
-#### DB定義書
-[DB定義書](https://github.com/inagacky/go_gin_sample/blob/master/docs/db/database_design.md)
