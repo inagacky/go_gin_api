@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/inagacky/go_gin_sample/src/api/util"
+	"github.com/inagacky/go_gin_api/src/api/util"
 	l "github.com/sirupsen/logrus"
 	"os"
 )
@@ -20,7 +20,7 @@ func Init() (*os.File, error) {
 	logger.ReportCaller = true
 
 	// 環境変数から取得
-	logPath := util.Getenv("GO_GIN_SAMPLE_LOG_PATH", "/Users/daisuke/go/src/github.com/inagacky/go_gin_sample/apps/log")
+	logPath := util.Getenv("go_gin_api_LOG_PATH", "/Users/daisuke/go/src/github.com/inagacky/go_gin_api/apps/log")
 
 	// ログファイルの作成・追記の準備
 	logfile, err := os.OpenFile(logPath + "/" + logFileName, os.O_WRONLY|os.O_CREATE, 0664)

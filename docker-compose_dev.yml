@@ -1,13 +1,13 @@
 version: '3'
 services:
-  go_gin_sample_db:
-    build: db/go_gin_sample_db
-    container_name: go_gin_sample_db_dev
+  go_gin_api_db:
+    build: db/go_gin_api_db
+    container_name: go_gin_api_db_dev
     ports:
       - 3306:3306
     volumes:
       - mysql-go-gin-sample-app-data:/var/lib/mysql
-      - ./db/go_gin_sample_db/initdb.d:/docker-entrypoint-initdb.d
+      - ./db/go_gin_api_db/initdb.d:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: sample
       MYSQL_APP_USER: sample

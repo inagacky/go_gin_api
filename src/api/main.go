@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/inagacky/go_gin_sample/src/api/configure/db"
-	"github.com/inagacky/go_gin_sample/src/api/configure/logger"
-	"github.com/inagacky/go_gin_sample/src/api/configure/routing"
+	"github.com/inagacky/go_gin_api/src/api/configure/db"
+	"github.com/inagacky/go_gin_api/src/api/configure/logger"
+	"github.com/inagacky/go_gin_api/src/api/configure/routing"
 )
 
 func main() {

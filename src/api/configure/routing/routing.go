@@ -2,7 +2,7 @@ package routing
 
 import (
 	"github.com/gin-gonic/gin"
-	co "github.com/inagacky/go_gin_sample/src/api/controller"
+	co "github.com/inagacky/go_gin_api/src/api/controller"
 )
 
 func GetRouting() *gin.Engine {

@@ -30,9 +30,9 @@
 ## ドキュメント
 
 #### API定義書
-[API定義](https://github.com/inagacky/go_gin_sample/blob/master/docs/api/api_design.md)
+[API定義](https://github.com/inagacky/go_gin_api/blob/master/docs/api/api_design.md)
 #### DB定義書
-[DB定義書](https://github.com/inagacky/go_gin_sample/blob/master/docs/db/database_design.md)
+[DB定義書](https://github.com/inagacky/go_gin_api/blob/master/docs/db/database_design.md)
 
 ## プログラム使用方法
 Dockerコンテナとして起動します。

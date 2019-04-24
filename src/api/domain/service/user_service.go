@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	l "github.com/inagacky/go_gin_sample/src/api/configure/logger"
-	"github.com/inagacky/go_gin_sample/src/api/domain/model"
-	r "github.com/inagacky/go_gin_sample/src/api/infrastructure/repository"
+	l "github.com/inagacky/go_gin_api/src/api/configure/logger"
+	"github.com/inagacky/go_gin_api/src/api/domain/model"
+	r "github.com/inagacky/go_gin_api/src/api/infrastructure/repository"
 )
 var logger  = l.GetLogger()
 
