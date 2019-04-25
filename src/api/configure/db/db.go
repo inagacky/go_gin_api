@@ -2,15 +2,13 @@ package db
 
 import (
 	"github.com/inagacky/go_gin_api/src/api/util"
-	//	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
 )
-var db *gorm.DB
+var DB *gorm.DB
 
-
-func Init() {
+func Init() *gorm.DB {
 	var err error
 
 	// 環境変数から取得
@@ -23,12 +21,15 @@ func Init() {
 
 	// データソースの定義
 	dataSource := dbUser+":"+dbPass+"@"+protocol+"/"+dbName + "?parseTime=true&charset=utf8"
-	db, err = gorm.Open("mysql", dataSource)
+	DB, err = gorm.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatalf("データベースの接続に失敗しました。: %v", err)
 	}
+
+	return GetDB()
 }
+
 // DBを返却
 func GetDB() *gorm.DB {
-	return db
+	return DB
 }

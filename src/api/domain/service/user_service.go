@@ -8,23 +8,36 @@ import (
 )
 var logger  = l.GetLogger()
 
-type UserService struct {}
+type UserService interface {
+	GetById(id uint64) (*model.User, error)
+	CreateUser(user *model.User) (*model.User, error)
+	UpdateUser(paramUser *model.User) (*model.User, error)
+	DeleteUser(id uint64) (*model.User, error)
+}
+
+func NewUserService(userRepository r.UserRepository) UserService {
+	return &userService{
+		userRepository: userRepository,
+	}
+}
+
+type userService struct {
+	userRepository r.UserRepository
+}
 
 // IDを元にレコードを取得します
-func (c *UserService) GetById(id uint64) (*model.User, error) {
+func (c *userService) GetById(id uint64) (*model.User, error) {
 
-	repo := &r.UserRepository{}
-	user, err := repo.FindByUserId(id)
+	user, err := c.userRepository.FindByUserId(id)
 
 	return user, err
 }
 
 
 // Userの作成を行います
-func (c *UserService) CreateUser(user *model.User) (*model.User, error) {
+func (c *userService) CreateUser(user *model.User) (*model.User, error) {
 
-	repo := &r.UserRepository{}
-	emailUser, emailErr := repo.FindByEmail(user.Email)
+	emailUser, emailErr := c.userRepository.FindByEmail(user.Email)
 	if emailErr != nil {
 		logger.Error("ユーザーの取得処理でエラーが発生しました。: ", emailErr)
 		return nil, emailErr
@@ -37,16 +50,15 @@ func (c *UserService) CreateUser(user *model.User) (*model.User, error) {
 	}
 
 	user.Status = model.UserStatusValid
-	user, err := repo.Save(user)
+	user, err := c.userRepository.Save(user)
 
 	return user, err
 }
 
 // Userの更新を行います。
-func (c *UserService) UpdateUser(paramUser *model.User) (*model.User, error) {
+func (c *userService) UpdateUser(paramUser *model.User) (*model.User, error) {
 
-	repo := &r.UserRepository{}
-	user, existsErr := repo.FindByUserId(paramUser.Id)
+	user, existsErr := c.userRepository.FindByUserId(paramUser.Id)
 	if existsErr != nil {
 		logger.Error("ユーザーの取得処理でエラーが発生しました。: ", existsErr)
 		return nil, existsErr
@@ -59,7 +71,7 @@ func (c *UserService) UpdateUser(paramUser *model.User) (*model.User, error) {
 	}
 
 	// 同一メールアドレスのチェック
-	emailUser, emailErr := repo.FindByEmail(paramUser.Email)
+	emailUser, emailErr := c.userRepository.FindByEmail(paramUser.Email)
 	if emailErr != nil {
 		logger.Error("ユーザーの取得処理でエラーが発生しました。: ", emailErr)
 		return nil, emailErr
@@ -73,16 +85,15 @@ func (c *UserService) UpdateUser(paramUser *model.User) (*model.User, error) {
 
 	// 値のコピー
 	user.ValueCopy(paramUser)
-	user, err := repo.Update(user)
+	user, err := c.userRepository.Update(user)
 
 	return user, err
 }
 
 // Userの削除を行います。
-func (c *UserService) DeleteUser(id uint64) (*model.User, error) {
+func (c *userService) DeleteUser(id uint64) (*model.User, error) {
 
-	repo := &r.UserRepository{}
-	user, existsErr := repo.FindByUserId(id)
+	user, existsErr := c.userRepository.FindByUserId(id)
 	if existsErr != nil {
 		logger.Error("ユーザーの取得処理でエラーが発生しました。:", existsErr)
 		return nil, existsErr
@@ -94,7 +105,7 @@ func (c *UserService) DeleteUser(id uint64) (*model.User, error) {
 		return nil, errors.New(msg)
 	}
 
-	user, err := repo.Delete(user)
+	user, err := c.userRepository.Delete(user)
 
 	return user, err
 }

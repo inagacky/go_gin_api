@@ -37,7 +37,6 @@ func Init() (*os.File, error) {
 }
 
 // Loggerを返却
-// TODO: もっと良い書き方を探す
 func GetLogger() *l.Logger {
 	return logger
 }
