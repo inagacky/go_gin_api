@@ -4,11 +4,10 @@ import (
 	"github.com/inagacky/go_gin_api/src/api/util"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"log"
 )
 var DB *gorm.DB
 
-func Init() *gorm.DB {
+func Init() (*gorm.DB, error) {
 	var err error
 
 	// 環境変数から取得
@@ -23,10 +22,10 @@ func Init() *gorm.DB {
 	dataSource := dbUser+":"+dbPass+"@"+protocol+"/"+dbName + "?parseTime=true&charset=utf8"
 	DB, err = gorm.Open("mysql", dataSource)
 	if err != nil {
-		log.Fatalf("データベースの接続に失敗しました。: %v", err)
+		return nil, err
 	}
 
-	return GetDB()
+	return GetDB(), nil
 }
 
 // DBを返却
