@@ -27,8 +27,6 @@ type userController struct {
 	userService s.UserService
 }
 
-var logger  = l.GetLogger()
-
 // ユーザー取得API
 func (co *userController) GetUser (c *gin.Context) {
 
@@ -38,7 +36,8 @@ func (co *userController) GetUser (c *gin.Context) {
 
 	// パラメータのチェック
 	if err := c.Bind(&getUserRequest); err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
+
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
@@ -48,7 +47,7 @@ func (co *userController) GetUser (c *gin.Context) {
 	// ユーザー取得
 	user, err := co.userService.GetById(id)
 	if err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
 		return
 	}
@@ -65,14 +64,14 @@ func (co *userController) CreateUser (c *gin.Context) {
 	commonResponse := &usecase.CommonResponse{}
 	// パラメータのチェック
 	if err := c.ShouldBindJSON(&createUserRequest); err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
 	// ユーザー作成
 	user, err := co.userService.CreateUser(createUserRequest.ConvertUserModel())
 	if err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
 		return
 	}
@@ -89,7 +88,7 @@ func (co *userController) UpdateUser (c *gin.Context) {
 	updateUserRequest.Id = c.Param("id")
 	// パラメータのチェック
 	if err := c.ShouldBindJSON(&updateUserRequest); err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
@@ -97,7 +96,7 @@ func (co *userController) UpdateUser (c *gin.Context) {
 	// ユーザー更新
 	user, err := co.userService.UpdateUser(updateUserRequest.ConvertUserModel())
 	if err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
 		return
 	}
@@ -114,7 +113,7 @@ func (co *userController) DeleteUser (c *gin.Context) {
 
 	// パラメータのチェック
 	if err := c.Bind(&deleteUserRequest); err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateValidateErrorResponse(err.Error()))
 		return
 	}
@@ -124,7 +123,7 @@ func (co *userController) DeleteUser (c *gin.Context) {
 	// ユーザー削除
 	user, err := co.userService.DeleteUser(id)
 	if err != nil {
-		logger.Error(err)
+		l.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, commonResponse.CreateSQLErrorResponse(err.Error()))
 		return
 	}

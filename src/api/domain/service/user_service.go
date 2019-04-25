@@ -5,8 +5,8 @@ import (
 	l "github.com/inagacky/go_gin_api/src/api/configure/logger"
 	"github.com/inagacky/go_gin_api/src/api/domain/model"
 	r "github.com/inagacky/go_gin_api/src/api/infrastructure/repository"
+	"strconv"
 )
-var logger  = l.GetLogger()
 
 type UserService interface {
 	GetById(id uint64) (*model.User, error)
@@ -39,13 +39,13 @@ func (c *userService) CreateUser(user *model.User) (*model.User, error) {
 
 	emailUser, emailErr := c.userRepository.FindByEmail(user.Email)
 	if emailErr != nil {
-		logger.Error("ユーザーの取得処理でエラーが発生しました。: ", emailErr)
+		l.GetLogger().Error("ユーザーの取得処理でエラーが発生しました。: " + emailErr.Error())
 		return nil, emailErr
 	}
 
 	if emailUser != nil {
 		msg := "指定されたメールアドレスのユーザーは既に存在します。"
-		logger.Warn("該当メールアドレスのユーザーは既に存在します。: ", emailUser.Email)
+		l.GetLogger().Warn("該当メールアドレスのユーザーは既に存在します。: " + emailUser.Email)
 		return nil, errors.New(msg)
 	}
 
@@ -60,26 +60,26 @@ func (c *userService) UpdateUser(paramUser *model.User) (*model.User, error) {
 
 	user, existsErr := c.userRepository.FindByUserId(paramUser.Id)
 	if existsErr != nil {
-		logger.Error("ユーザーの取得処理でエラーが発生しました。: ", existsErr)
+		l.GetLogger().Error("ユーザーの取得処理でエラーが発生しました。: " + existsErr.Error())
 		return nil, existsErr
 	}
 
 	if user == nil {
 		msg := "指定されたユーザーが存在しません。"
-		logger.Warn("指定されたユーザーが存在しません。ID: ", paramUser.Id)
+		l.GetLogger().Warn("指定されたユーザーが存在しません。ID: " + strconv.FormatUint(paramUser.Id, 10))
 		return nil, errors.New(msg)
 	}
 
 	// 同一メールアドレスのチェック
 	emailUser, emailErr := c.userRepository.FindByEmail(paramUser.Email)
 	if emailErr != nil {
-		logger.Error("ユーザーの取得処理でエラーが発生しました。: ", emailErr)
+		l.GetLogger().Error("ユーザーの取得処理でエラーが発生しました。: " + emailErr.Error())
 		return nil, emailErr
 	}
 
 	if emailUser != nil && emailUser.Id != user.Id {
 		msg := "指定されたメールアドレスのユーザーは既に存在します。"
-		logger.Warn("該当メールアドレスのユーザーは既に存在します。: ", emailUser.Email)
+		l.GetLogger().Warn("該当メールアドレスのユーザーは既に存在します。: " + emailUser.Email)
 		return nil, errors.New(msg)
 	}
 
@@ -95,13 +95,13 @@ func (c *userService) DeleteUser(id uint64) (*model.User, error) {
 
 	user, existsErr := c.userRepository.FindByUserId(id)
 	if existsErr != nil {
-		logger.Error("ユーザーの取得処理でエラーが発生しました。:", existsErr)
+		l.GetLogger().Error("ユーザーの取得処理でエラーが発生しました。:" + existsErr.Error())
 		return nil, existsErr
 	}
 
 	if user == nil {
 		msg := "指定されたユーザーが存在しません。"
-		logger.Warn("指定されたユーザーが存在しません。ID: ", id)
+		l.GetLogger().Warn("指定されたユーザーが存在しません。ID: "+ strconv.FormatUint(id, 10))
 		return nil, errors.New(msg)
 	}
 
