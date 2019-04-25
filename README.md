@@ -8,7 +8,7 @@
 ### ORM
 `GORM`
 ### ログライブラリ
-`logrus`
+`go.uber.org/zap`
 ### パッケージ管理ツール
 `dep`
 ### その他
