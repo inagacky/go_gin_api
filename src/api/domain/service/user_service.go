@@ -15,14 +15,14 @@ type UserService interface {
 	DeleteUser(id uint64) (*model.User, error)
 }
 
-type userService struct {
-	userRepository r.UserRepository
-}
-
 func NewUserService(userRepository r.UserRepository) UserService {
 	return &userService{
 		userRepository: userRepository,
 	}
+}
+
+type userService struct {
+	userRepository r.UserRepository
 }
 
 // IDを元にレコードを取得します

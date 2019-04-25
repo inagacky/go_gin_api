@@ -2,7 +2,6 @@ package db
 
 import (
 	"github.com/inagacky/go_gin_api/src/api/util"
-	//	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
@@ -29,6 +28,7 @@ func Init() *gorm.DB {
 
 	return GetDB()
 }
+
 // DBを返却
 func GetDB() *gorm.DB {
 	return DB

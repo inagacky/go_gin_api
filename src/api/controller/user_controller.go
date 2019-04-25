@@ -17,6 +17,12 @@ type UserController interface {
 	DeleteUser (c *gin.Context)
 }
 
+func NewUserController(userService s.UserService) UserController {
+	return &userController{
+		userService: userService,
+	}
+}
+
 type userController struct {
 	userService s.UserService
 }

@@ -17,14 +17,13 @@ type UserRepository interface {
 	Delete(user *m.User) (*m.User, error)
 }
 
-type userRepository struct {
-}
-
-func NewUserRepository(db *gorm.DB) UserRepository {
+func NewUserRepository() UserRepository {
 	return &userRepository{
 	}
 }
 
+type userRepository struct {
+}
 
 // IDを元にユーザーを取得します
 func (c *userRepository) FindByUserId(id uint64) (*m.User, error) {
