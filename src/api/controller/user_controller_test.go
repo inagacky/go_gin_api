@@ -298,6 +298,211 @@ func TestCreateUserServiceError(t *testing.T) {
 	}
 }
 
+
+
+// UpateUser正常系
+func TestUpdateUserSuccess(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+
+	// リクエスト情報
+	requestUser := testRequest{
+		FirstName: "TestFirstName",
+		LastName: "TestLastName",
+		Email:"test@sample.co.jp",
+	}
+	// レスポンス情報
+	response := testResponse{
+		Status: http.StatusOK,
+		Message: "",
+	}
+
+	postVal, _ := json.Marshal(requestUser)
+
+	userCo := NewUserController(&UserServiceSuccessMock{})
+	r.PUT("/:id", userCo.UpdateUser)
+	req, _ := http.NewRequest("PUT", "/1", bytes.NewBuffer(postVal))
+	r.ServeHTTP(w, req)
+
+	// ステータスコードのチェック
+	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
+
+	// レスポンス結果のチェック
+	commonResponse := usecase.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(usecaseUser.UpdateUserResponse{User:createTestUser()}))
+	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
+}
+
+// UpdateUserリクエスト情報に誤りがある場合
+func TestUpdateUserRequestError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+
+	tests := []testPattern{
+		{
+			// FirstNameがブランク
+			testRequest{ FirstName: "", LastName: "TestLastName", Email:"test@sample.co.jp" },
+			testResponse{Status: http.StatusBadRequest, Message: "Key: 'UpdateUserRequest.FirstName' Error:Field validation for 'FirstName' failed on the 'required' tag"},
+		},
+		{
+			// LastNameがブランク
+			testRequest{ FirstName: "TestFirstName", LastName: "", Email:"test@sample.co.jp" },
+			testResponse{Status: http.StatusBadRequest, Message: "Key: 'UpdateUserRequest.LastName' Error:Field validation for 'LastName' failed on the 'required' tag"},
+		},
+		{
+			// Emailがブランク
+			testRequest{ FirstName: "TestFirstName", LastName: "TestLastName", Email:"" },
+			testResponse{Status: http.StatusBadRequest, Message: "Key: 'UpdateUserRequest.Email' Error:Field validation for 'Email' failed on the 'required' tag"},
+		},
+		{
+			// Emailのフォーマット不正
+			testRequest{ FirstName: "TestFirstName", LastName: "TestLastName", Email:"test" },   // Emailのフォーマット不正
+			testResponse{Status: http.StatusBadRequest, Message: "Key: 'UpdateUserRequest.Email' Error:Field validation for 'Email' failed on the 'email' tag"},
+		},
+
+	}
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+	userCo := NewUserController(&UserServiceSuccessMock{})
+	r.PUT("/:id", userCo.UpdateUser)
+
+	for _, test := range tests {
+
+		w := httptest.NewRecorder()
+		postVal, _ := json.Marshal(test.Request)
+		req, _ := http.NewRequest("PUT", "/1", bytes.NewBuffer(postVal))
+		r.ServeHTTP(w, req)
+
+		assert.Equal(t, test.Response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
+
+		commonResponse := usecase.CommonResponse{}
+		jVal, _ := json.Marshal(commonResponse.CreateValidateErrorResponse(test.Response.Message))
+
+		assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
+	}
+}
+
+
+// UpdateUser Service層でのエラー
+func TestUpdateUserServiceError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+
+	tests := []testPattern{
+		{
+			// FirstNameがnil
+			testRequest{ FirstName: "TestFirstName", LastName: "TestLastName", Email:"test@sample.co.jp" },
+			testResponse{Status: http.StatusBadRequest, Message: errors.New(createErrorMessage()).Error() },
+		},
+	}
+
+	userCo := NewUserController(&UserServiceErrorMock{})
+	r.POST("/", userCo.CreateUser)
+
+	for _, test := range tests {
+
+		postVal, _ := json.Marshal(test.Request)
+		req, _ := http.NewRequest("POST", "/", bytes.NewBuffer(postVal))
+		r.ServeHTTP(w, req)
+
+		assert.Equal(t, test.Response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
+
+		commonResponse := usecase.CommonResponse{}
+		jVal, _ := json.Marshal(commonResponse.CreateSQLErrorResponse(test.Response.Message))
+		assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
+	}
+}
+
+
+// DeleteUser 正常系
+func TestDeleteUserSuccess(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+
+	userCo := NewUserController(&UserServiceSuccessMock{})
+	r.DELETE("/:id", userCo.DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/1", nil)
+	r.ServeHTTP(w, req)
+
+	response := testResponse{
+		Status: http.StatusOK,
+		Message: "",
+	}
+
+	// ステータスコードのチェック
+	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
+
+	// レスポンス結果のチェック
+	commonResponse := usecase.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(usecaseUser.DeleteUserResponse{User:createTestUser()}))
+	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
+}
+
+// DeleteUserリクエスト情報に誤りがある場合
+func TestDeleteUserRequestError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+
+	userCo := NewUserController(&UserServiceSuccessMock{})
+	r.DELETE("/:id", userCo.DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/-1", nil)
+	r.ServeHTTP(w, req)
+
+	response := testResponse{
+		Status: http.StatusBadRequest,
+		Message: "Key: 'DeleteUserRequest.Id' Error:Field validation for 'Id' failed on the 'number' tag",
+	}
+
+	// ステータスコードのチェック
+	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
+
+	// レスポンス結果のチェック
+	err := errors.New(response.Message)
+	commonResponse := usecase.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateValidateErrorResponse(err.Error()))
+	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
+}
+
+// DeleteUser Service層でのエラー
+func TestDeleteUserServiceError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+
+	w := httptest.NewRecorder()
+	_, r := gin.CreateTestContext(w)
+
+	userCo := NewUserController(&UserServiceErrorMock{})
+	r.DELETE("/:id", userCo.DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/1", nil)
+	r.ServeHTTP(w, req)
+
+	response := testResponse{
+		Status: http.StatusBadRequest,
+		Message: errors.New(createErrorMessage()).Error(),
+	}
+
+	// ステータスコードのチェック
+	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
+
+	// レスポンス結果のチェック
+	commonResponse := usecase.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSQLErrorResponse(response.Message))
+	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
+}
+
 // テストユーザー作成
 func createTestUser() *model.User {
 
