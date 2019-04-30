@@ -8,7 +8,7 @@ jobs:
       - TEST_RESULTS: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
       - SOURCE_BASE_DIR: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api/src/api
       - GOPATH: /home/circleci/go
-    working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api
+    working_directory: /home/circleci/go/src/github.com/inagacky
     steps:
       - run: echo 'export PATH=${GOPATH}/bin/:${PATH}' >> $BASH_ENV
       - checkout
@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Run unit tests
           environment:
-            go_gin_api_LOG_PATH: "/home/circleci/go/src/github.com/inagacky/go_gin_api/log"
+            go_gin_api_LOG_PATH: /home/circleci/go/src/github.com/inagacky/go_gin_api/log
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             go test -v -coverprofile=coverage.txt -covermode=count ${SOURCE_BASE_DIR}/...| tee ${TEST_RESULTS}/go-test.out
