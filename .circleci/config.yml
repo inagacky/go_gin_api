@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: echo 'export PATH=${GOPATH}/bin/:${PATH}' >> $BASH_ENV
       - checkout
-      - run: cd /Users/daisuke/go/src/github.com/inagacky/go_gin_api/src/api
+      - run: cd /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
       - run: mkdir -p $TEST_RESULTS
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: dep ensure
