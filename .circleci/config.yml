@@ -6,7 +6,7 @@ jobs:
       - image: circleci/golang:latest
     environment:
       - TEST_RESULTS: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
-      - SOURCE_BASE_DIR: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api/src/api
+      - SOURCE_BASE_DIR: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
       - GOPATH: /home/circleci/go
     working_directory: /home/circleci/go/src/github.com/inagacky
     steps:
