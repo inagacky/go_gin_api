@@ -7,7 +7,7 @@ jobs:
     environment:
       - TEST_RESULTS: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
       - GOPATH: /home/circleci/go
-    working_directory: /home/circleci/go/src/github.com/inagacky
+    working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api
     steps:
       - run: echo 'export PATH=${GOPATH}/bin/:${PATH}' >> $BASH_ENV
       - checkout
