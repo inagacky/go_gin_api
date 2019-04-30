@@ -6,15 +6,15 @@ jobs:
       - image: circleci/golang:latest
     environment:
       - TEST_RESULTS: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
-      - SOURCE_BASE_DIR: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
       - GOPATH: /home/circleci/go
-    working_directory: /home/circleci/go/src/github.com/inagacky
+    working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
     steps:
       - run: echo 'export PATH=${GOPATH}/bin/:${PATH}' >> $BASH_ENV
-      - checkout
+      - checkout:
+          - path: /home/circleci/go/src/github.com/inagacky/go_gin_api
       - run: mkdir -p $TEST_RESULTS
       - run: go get -u github.com/golang/dep/cmd/dep
-      - run: cd $SOURCE_BASE_DIR && dep ensure
+      - run: dep ensure
       - run: go get github.com/jstemmer/go-junit-report
       - run:
           name: Run unit tests
@@ -22,5 +22,5 @@ jobs:
             go_gin_api_LOG_PATH: /home/circleci/go/src/github.com/inagacky/go_gin_api/log
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
-            go test -v -coverprofile=coverage.txt -covermode=count ${SOURCE_BASE_DIR}/...| tee ${TEST_RESULTS}/go-test.out
+            go test -v -coverprofile=coverage.txt -covermode=count ./...| tee ${TEST_RESULTS}/go-test.out
             bash <(curl -s https://codecov.io/bash)
