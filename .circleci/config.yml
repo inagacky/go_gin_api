@@ -28,3 +28,5 @@ jobs:
             go test -v -coverprofile=coverage.txt -covermode=count ./...| tee ${TEST_RESULTS}/go-test.out
             bash <(curl -s https://codecov.io/bash)
           working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
+      - store_test_results: #テスト結果の格納
+          path: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
