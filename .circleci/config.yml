@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version
+      - image: circleci/golang:latest
+    environment:
+      - TEST_RESULTS: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
+      - GOPATH: /home/circleci/go
+    working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api
+    steps:
+      - run: echo 'export PATH=${GOPATH}/bin/:${PATH}' >> $BASH_ENV
+      - checkout
+      - run: mkdir -p $TEST_RESULTS
+      - run:
+          name: Install Package
+          command: |
+            go get -u github.com/golang/dep/cmd/dep
+            dep ensure
+            go get github.com/jstemmer/go-junit-report
+          working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
+      - run:
+          name: Run unit tests
+          environment:
+            go_gin_api_LOG_PATH: /home/circleci/go/src/github.com/inagacky/go_gin_api/log
+          command: |
+            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+            go test -v -coverprofile=coverage.txt -covermode=count ./...| tee ${TEST_RESULTS}/go-test.out
+            bash <(curl -s https://codecov.io/bash)
+          working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
+      - store_test_results: #テスト結果の格納
+          path: /home/circleci/go/src/github.com/inagacky/go_gin_api/tmp/test-result
