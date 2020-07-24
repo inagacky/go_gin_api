@@ -1,3 +1,3 @@
 #!/bin/sh
 
-dep ensure -vendor-only
+go mod tidy
