@@ -1,21 +1,17 @@
-package usecase
-
-import (
-	e "github.com/inagacky/go_gin_api/src/api/usecase/error"
-)
+package http
 
 type CommonResponse struct {
-	Status int `json:"status"`
-	Error *e.ErrorResponse `json:"error"`
-	Result interface{} `json:"result"`
+	Status int           `json:"status"`
+	Error *ErrorResponse `json:"error"`
+	Result interface{}   `json:"result"`
 }
 
 // バリデートのエラーレスポンスを作成する
 func (re *CommonResponse) CreateValidateErrorResponse(error string) *CommonResponse {
 	re.Status = StatusError
 	// ErrorResponseの定義
-	errorResponse := &e.ErrorResponse{}
-	errorResponse.Code = e.ErrorCodeRequestValidate
+	errorResponse := &ErrorResponse{}
+	errorResponse.Code = ErrorCodeRequestValidate
 	errorResponse.Error = error
 	re.Error = errorResponse
 
@@ -26,8 +22,8 @@ func (re *CommonResponse) CreateValidateErrorResponse(error string) *CommonRespo
 func (re *CommonResponse) CreateSQLErrorResponse(error string) *CommonResponse {
 	re.Status = StatusError
 	// ErrorResponseの定義
-	errorResponse := &e.ErrorResponse{}
-	errorResponse.Code = e.ErrorCodeSQL
+	errorResponse := &ErrorResponse{}
+	errorResponse.Code = ErrorCodeSQL
 	errorResponse.Error = error
 	re.Error = errorResponse
 

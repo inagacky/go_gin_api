@@ -1,4 +1,4 @@
-package usecase
+package http
 
 import (
 	"github.com/inagacky/go_gin_api/src/api/domain/model"

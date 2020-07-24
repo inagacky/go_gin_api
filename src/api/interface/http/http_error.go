@@ -1,4 +1,4 @@
-package usecase
+package http
 
 
 // 共通構造体の定義

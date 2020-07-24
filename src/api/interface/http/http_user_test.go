@@ -1,5 +1,4 @@
-package usecase
-
+package http
 
 import (
 	"github.com/stretchr/testify/assert"

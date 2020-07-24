@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 
 import (
@@ -7,8 +7,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/inagacky/go_gin_api/src/api/domain/model"
-	"github.com/inagacky/go_gin_api/src/api/usecase"
-	usecaseUser "github.com/inagacky/go_gin_api/src/api/usecase/user"
+	"github.com/inagacky/go_gin_api/src/api/interface"
+	http2 "github.com/inagacky/go_gin_api/src/api/interface/http"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -103,7 +103,7 @@ func TestGetUserSuccess(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.GET("/:id", userCo.GetUser)
 	req, _ := http.NewRequest("GET", "/1", nil)
 	r.ServeHTTP(w, req)
@@ -117,8 +117,8 @@ func TestGetUserSuccess(t *testing.T) {
 	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
 	// レスポンス結果のチェック
-	commonResponse := usecase.CommonResponse{}
-	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(usecaseUser.GetUserResponse{User:createTestUser()}))
+	commonResponse := http2.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(http2.GetUserResponse{User: createTestUser()}))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
 
@@ -130,7 +130,7 @@ func TestGetUserRequestError(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.GET("/:id", userCo.GetUser)
 	req, _ := http.NewRequest("GET", "/-1", nil)
 	r.ServeHTTP(w, req)
@@ -145,7 +145,7 @@ func TestGetUserRequestError(t *testing.T) {
 
 	// レスポンス結果のチェック
 	err := errors.New(response.Message)
-	commonResponse := usecase.CommonResponse{}
+	commonResponse := http2.CommonResponse{}
 	jVal, _ := json.Marshal(commonResponse.CreateValidateErrorResponse(err.Error()))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
@@ -158,7 +158,7 @@ func TestGetUserServiceError(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	userCo := NewUserController(&UserServiceErrorMock{})
+	userCo := _interface.NewUserController(&UserServiceErrorMock{})
 	r.GET("/:id", userCo.GetUser)
 	req, _ := http.NewRequest("GET", "/1", nil)
 	r.ServeHTTP(w, req)
@@ -172,7 +172,7 @@ func TestGetUserServiceError(t *testing.T) {
 	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
 	// レスポンス結果のチェック
-	commonResponse := usecase.CommonResponse{}
+	commonResponse := http2.CommonResponse{}
 	jVal, _ := json.Marshal(commonResponse.CreateSQLErrorResponse(response.Message))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
@@ -200,7 +200,7 @@ func TestCreateUserSuccess(t *testing.T) {
 
 	postVal, _ := json.Marshal(requestUser)
 
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.POST("/", userCo.CreateUser)
 	req, _ := http.NewRequest("POST", "/", bytes.NewBuffer(postVal))
 	r.ServeHTTP(w, req)
@@ -209,8 +209,8 @@ func TestCreateUserSuccess(t *testing.T) {
 	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
 	// レスポンス結果のチェック
-	commonResponse := usecase.CommonResponse{}
-	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(usecaseUser.CreateUserResponse{User:createTestUser()}))
+	commonResponse := http2.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(http2.CreateUserResponse{User: createTestUser()}))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
 
@@ -245,7 +245,7 @@ func TestCreateUserRequestError(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.POST("/", userCo.CreateUser)
 
 	for _, test := range tests {
@@ -257,7 +257,7 @@ func TestCreateUserRequestError(t *testing.T) {
 
 		assert.Equal(t, test.Response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
-		commonResponse := usecase.CommonResponse{}
+		commonResponse := http2.CommonResponse{}
 		jVal, _ := json.Marshal(commonResponse.CreateValidateErrorResponse(test.Response.Message))
 
 		assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
@@ -281,7 +281,7 @@ func TestCreateUserServiceError(t *testing.T) {
 		},
 	}
 
-	userCo := NewUserController(&UserServiceErrorMock{})
+	userCo := _interface.NewUserController(&UserServiceErrorMock{})
 	r.POST("/", userCo.CreateUser)
 
 	for _, test := range tests {
@@ -292,7 +292,7 @@ func TestCreateUserServiceError(t *testing.T) {
 
 		assert.Equal(t, test.Response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
-		commonResponse := usecase.CommonResponse{}
+		commonResponse := http2.CommonResponse{}
 		jVal, _ := json.Marshal(commonResponse.CreateSQLErrorResponse(test.Response.Message))
 		assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 	}
@@ -322,7 +322,7 @@ func TestUpdateUserSuccess(t *testing.T) {
 
 	postVal, _ := json.Marshal(requestUser)
 
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.PUT("/:id", userCo.UpdateUser)
 	req, _ := http.NewRequest("PUT", "/1", bytes.NewBuffer(postVal))
 	r.ServeHTTP(w, req)
@@ -331,8 +331,8 @@ func TestUpdateUserSuccess(t *testing.T) {
 	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
 	// レスポンス結果のチェック
-	commonResponse := usecase.CommonResponse{}
-	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(usecaseUser.UpdateUserResponse{User:createTestUser()}))
+	commonResponse := http2.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(http2.UpdateUserResponse{User: createTestUser()}))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
 
@@ -367,7 +367,7 @@ func TestUpdateUserRequestError(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.PUT("/:id", userCo.UpdateUser)
 
 	for _, test := range tests {
@@ -379,7 +379,7 @@ func TestUpdateUserRequestError(t *testing.T) {
 
 		assert.Equal(t, test.Response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
-		commonResponse := usecase.CommonResponse{}
+		commonResponse := http2.CommonResponse{}
 		jVal, _ := json.Marshal(commonResponse.CreateValidateErrorResponse(test.Response.Message))
 
 		assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
@@ -403,7 +403,7 @@ func TestUpdateUserServiceError(t *testing.T) {
 		},
 	}
 
-	userCo := NewUserController(&UserServiceErrorMock{})
+	userCo := _interface.NewUserController(&UserServiceErrorMock{})
 	r.POST("/", userCo.CreateUser)
 
 	for _, test := range tests {
@@ -414,7 +414,7 @@ func TestUpdateUserServiceError(t *testing.T) {
 
 		assert.Equal(t, test.Response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
-		commonResponse := usecase.CommonResponse{}
+		commonResponse := http2.CommonResponse{}
 		jVal, _ := json.Marshal(commonResponse.CreateSQLErrorResponse(test.Response.Message))
 		assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 	}
@@ -429,7 +429,7 @@ func TestDeleteUserSuccess(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.DELETE("/:id", userCo.DeleteUser)
 	req, _ := http.NewRequest("DELETE", "/1", nil)
 	r.ServeHTTP(w, req)
@@ -443,8 +443,8 @@ func TestDeleteUserSuccess(t *testing.T) {
 	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
 	// レスポンス結果のチェック
-	commonResponse := usecase.CommonResponse{}
-	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(usecaseUser.DeleteUserResponse{User:createTestUser()}))
+	commonResponse := http2.CommonResponse{}
+	jVal, _ := json.Marshal(commonResponse.CreateSuccessResponse(http2.DeleteUserResponse{User: createTestUser()}))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
 
@@ -456,7 +456,7 @@ func TestDeleteUserRequestError(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	userCo := NewUserController(&UserServiceSuccessMock{})
+	userCo := _interface.NewUserController(&UserServiceSuccessMock{})
 	r.DELETE("/:id", userCo.DeleteUser)
 	req, _ := http.NewRequest("DELETE", "/-1", nil)
 	r.ServeHTTP(w, req)
@@ -471,7 +471,7 @@ func TestDeleteUserRequestError(t *testing.T) {
 
 	// レスポンス結果のチェック
 	err := errors.New(response.Message)
-	commonResponse := usecase.CommonResponse{}
+	commonResponse := http2.CommonResponse{}
 	jVal, _ := json.Marshal(commonResponse.CreateValidateErrorResponse(err.Error()))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }
@@ -484,7 +484,7 @@ func TestDeleteUserServiceError(t *testing.T) {
 	w := httptest.NewRecorder()
 	_, r := gin.CreateTestContext(w)
 
-	userCo := NewUserController(&UserServiceErrorMock{})
+	userCo := _interface.NewUserController(&UserServiceErrorMock{})
 	r.DELETE("/:id", userCo.DeleteUser)
 	req, _ := http.NewRequest("DELETE", "/1", nil)
 	r.ServeHTTP(w, req)
@@ -498,7 +498,7 @@ func TestDeleteUserServiceError(t *testing.T) {
 	assert.Equal(t, response.Status, w.Code, "not Matched HttpCode: %v", w.Code)
 
 	// レスポンス結果のチェック
-	commonResponse := usecase.CommonResponse{}
+	commonResponse := http2.CommonResponse{}
 	jVal, _ := json.Marshal(commonResponse.CreateSQLErrorResponse(response.Message))
 	assert.Equal(t, w.Body.String(), string(jVal), "not Matched ResponseBody: %v", w.Body.String())
 }

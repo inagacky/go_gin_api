@@ -1,9 +1,9 @@
 package di
 
 import (
-	co "github.com/inagacky/go_gin_api/src/api/controller"
-	s "github.com/inagacky/go_gin_api/src/api/domain/service"
 	r "github.com/inagacky/go_gin_api/src/api/infrastructure/repository"
+	co "github.com/inagacky/go_gin_api/src/api/interface/controllers"
+	"github.com/inagacky/go_gin_api/src/api/usecase"
 	"go.uber.org/dig"
 )
 
@@ -24,11 +24,11 @@ func userInit(c *dig.Container) (*dig.Container, error) {
 		return r.NewUserRepository() }); err != nil {
 		return nil, err
 	}
-	if err := c.Provide(func (repo r.UserRepository) s.UserService {
-		return s.NewUserService(repo) }); err != nil {
+	if err := c.Provide(func (repo r.UserRepository) usecase.UserService {
+		return usecase.NewUserService(repo) }); err != nil {
 		return nil, err
 	}
-	if err := c.Provide(func (service s.UserService) co.UserController {
+	if err := c.Provide(func (service usecase.UserService) co.UserController {
 		return co.NewUserController(service) }); err != nil {
 		return nil, err
 	}
