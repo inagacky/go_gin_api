@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	l "github.com/inagacky/go_gin_api/src/api/configure/logger"
-	"github.com/inagacky/go_gin_api/src/api/interface/http"
+	"github.com/inagacky/go_gin_api/src/api/interface/gateway"
 	"github.com/inagacky/go_gin_api/src/api/usecase"
 	net "net/http"
 	"strconv"
@@ -29,8 +29,8 @@ type userController struct {
 // ユーザー取得API
 func (co *userController) GetUser (c *gin.Context) {
 
-	var getUserRequest http.GetUserRequest
-	commonResponse := &http.CommonResponse{}
+	var getUserRequest gateway.GetUserRequest
+	commonResponse := &gateway.CommonResponse{}
 	getUserRequest.Id = c.Param("id")
 
 	// パラメータのチェック
@@ -51,16 +51,16 @@ func (co *userController) GetUser (c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, commonResponse.CreateSuccessResponse(http.GetUserResponse{User: user}))
+	c.JSON(200, commonResponse.CreateSuccessResponse(gateway.GetUserResponse{User: user}))
 }
 
 
 // ユーザー作成API
 func (co *userController) CreateUser (c *gin.Context) {
 
-	var createUserRequest http.CreateUserRequest
+	var createUserRequest gateway.CreateUserRequest
 
-	commonResponse := &http.CommonResponse{}
+	commonResponse := &gateway.CommonResponse{}
 	// パラメータのチェック
 	if err := c.ShouldBindJSON(&createUserRequest); err != nil {
 		l.GetLogger().Error(err.Error())
@@ -75,14 +75,14 @@ func (co *userController) CreateUser (c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, commonResponse.CreateSuccessResponse(http.CreateUserResponse{User: user}))
+	c.JSON(200, commonResponse.CreateSuccessResponse(gateway.CreateUserResponse{User: user}))
 }
 
 // ユーザー情報更新API
 func (co *userController) UpdateUser (c *gin.Context) {
 
-	var updateUserRequest http.UpdateUserRequest
-	commonResponse := &http.CommonResponse{}
+	var updateUserRequest gateway.UpdateUserRequest
+	commonResponse := &gateway.CommonResponse{}
 
 	updateUserRequest.Id = c.Param("id")
 	// パラメータのチェック
@@ -100,14 +100,14 @@ func (co *userController) UpdateUser (c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, commonResponse.CreateSuccessResponse(http.CreateUserResponse{User: user}))
+	c.JSON(200, commonResponse.CreateSuccessResponse(gateway.CreateUserResponse{User: user}))
 }
 
 // ユーザー削除API
 func (co *userController) DeleteUser (c *gin.Context) {
 
-	var deleteUserRequest http.DeleteUserRequest
-	commonResponse := &http.CommonResponse{}
+	var deleteUserRequest gateway.DeleteUserRequest
+	commonResponse := &gateway.CommonResponse{}
 	deleteUserRequest.Id = c.Param("id")
 
 	// パラメータのチェック
@@ -127,5 +127,5 @@ func (co *userController) DeleteUser (c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, commonResponse.CreateSuccessResponse(http.DeleteUserResponse{User: user}))
+	c.JSON(200, commonResponse.CreateSuccessResponse(gateway.DeleteUserResponse{User: user}))
 }

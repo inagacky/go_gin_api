@@ -1,7 +1,7 @@
-package http
+package gateway
 
 import (
-	"github.com/inagacky/go_gin_api/src/api/domain/model"
+	"github.com/inagacky/go_gin_api/src/api/domain/entity"
 	"strconv"
 )
 
@@ -12,7 +12,7 @@ type GetUserRequest struct {
 
 // ユーザー取得のレスポンス
 type GetUserResponse struct {
-	User *model.User `json:"user"`
+	User *entity.User `json:"user"`
 }
 
 // ユーザー作成のリクエスト
@@ -24,7 +24,7 @@ type CreateUserRequest struct {
 
 // ユーザー作成のレスポンス
 type CreateUserResponse struct {
-	User *model.User `json:"user"`
+	User *entity.User `json:"user"`
 }
 
 // ユーザー更新のリクエスト
@@ -37,7 +37,7 @@ type UpdateUserRequest struct {
 
 // ユーザー更新のレスポンス
 type UpdateUserResponse struct {
-	User *model.User `json:"user"`
+	User *entity.User `json:"user"`
 }
 
 // ユーザー削除のリクエスト
@@ -47,14 +47,14 @@ type DeleteUserRequest struct {
 
 // ユーザー削除のレスポンス
 type DeleteUserResponse struct {
-	User *model.User `json:"user"`
+	User *entity.User `json:"user"`
 }
 
 
 
-func (request *CreateUserRequest) ConvertUserModel () *model.User {
+func (request *CreateUserRequest) ConvertUserModel () *entity.User {
 
-	user := &model.User{}
+	user := &entity.User{}
 	user.FirstName = request.FirstName
 	user.LastName = request.LastName
 	user.Email = request.Email
@@ -62,9 +62,9 @@ func (request *CreateUserRequest) ConvertUserModel () *model.User {
 	return user
 }
 
-func (request *UpdateUserRequest) ConvertUserModel () *model.User {
+func (request *UpdateUserRequest) ConvertUserModel () *entity.User {
 
-	user := &model.User{}
+	user := &entity.User{}
 	user.Id, _ = strconv.ParseUint(request.Id, 10 ,64)
 	user.FirstName = request.FirstName
 	user.LastName = request.LastName

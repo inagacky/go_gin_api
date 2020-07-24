@@ -1,4 +1,4 @@
-package http
+package gateway
 
 
 // 共通構造体の定義

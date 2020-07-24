@@ -4,7 +4,7 @@ package usecase
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/inagacky/go_gin_api/src/api/domain/model"
+	"github.com/inagacky/go_gin_api/src/api/domain/entity"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -17,27 +17,27 @@ var timeNow = time.Now()
 type UserRepositorySuccessMock struct {
 }
 
-func (m *UserRepositorySuccessMock) FindByUserId(id uint64) (*model.User, error) {
+func (m *UserRepositorySuccessMock) FindByUserId(id uint64) (*entity.User, error) {
 
 	return createTestUser(), nil
 }
 
-func (m *UserRepositorySuccessMock) FindByEmail(email string) (*model.User, error) {
+func (m *UserRepositorySuccessMock) FindByEmail(email string) (*entity.User, error) {
 
 	return nil, nil
 }
 
-func (m *UserRepositorySuccessMock) Save(user *model.User) (*model.User, error){
+func (m *UserRepositorySuccessMock) Save(user *entity.User) (*entity.User, error){
 
 	return createTestUser(), nil
 }
 
-func (m *UserRepositorySuccessMock) Update(user *model.User) (*model.User, error){
+func (m *UserRepositorySuccessMock) Update(user *entity.User) (*entity.User, error){
 
 	return createTestUser(), nil
 }
 
-func (m *UserRepositorySuccessMock) Delete(user *model.User) (*model.User, error){
+func (m *UserRepositorySuccessMock) Delete(user *entity.User) (*entity.User, error){
 
 	return createTestUser(), nil
 }
@@ -47,27 +47,27 @@ func (m *UserRepositorySuccessMock) Delete(user *model.User) (*model.User, error
 type UserRepositoryErrorMock struct {
 }
 
-func (m *UserRepositoryErrorMock) FindByUserId(id uint64) (*model.User, error) {
+func (m *UserRepositoryErrorMock) FindByUserId(id uint64) (*entity.User, error) {
 
 	return nil, errors.New(createErrorMessage())
 }
 
-func (m *UserRepositoryErrorMock) FindByEmail(email string) (*model.User, error) {
+func (m *UserRepositoryErrorMock) FindByEmail(email string) (*entity.User, error) {
 
 	return nil, errors.New(createErrorMessage())
 }
 
-func (m *UserRepositoryErrorMock) Save(user *model.User) (*model.User, error){
+func (m *UserRepositoryErrorMock) Save(user *entity.User) (*entity.User, error){
 
 	return nil, errors.New(createErrorMessage())
 }
 
-func (m *UserRepositoryErrorMock) Update(user *model.User) (*model.User, error){
+func (m *UserRepositoryErrorMock) Update(user *entity.User) (*entity.User, error){
 
 	return nil, errors.New(createErrorMessage())
 }
 
-func (m *UserRepositoryErrorMock) Delete(user *model.User) (*model.User, error){
+func (m *UserRepositoryErrorMock) Delete(user *entity.User) (*entity.User, error){
 
 	return nil, errors.New(createErrorMessage())
 }
@@ -165,19 +165,19 @@ func TestDeleteUserSuccess(t *testing.T)  {
 
 
 // テストユーザー作成
-func createTestUser() *model.User {
+func createTestUser() *entity.User {
 
-	common := model.CommonModelFields{
+	common := entity.CommonModelFields{
 		Id:1,
 		CreatedAt: timeNow,
 		UpdatedAt: timeNow,
 	}
-	user := model.User {
+	user := entity.User {
 		CommonModelFields: common,
-		FirstName:"FirstNameTest",
-		LastName:"LastNameTest",
-		Email:"test@gmail.com",
-		Status:model.UserStatusValid,
+		FirstName:         "FirstNameTest",
+		LastName:          "LastNameTest",
+		Email:             "test@gmail.com",
+		Status:            entity.UserStatusValid,
 	}
 
 	return &user

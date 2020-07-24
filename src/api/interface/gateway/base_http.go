@@ -1,4 +1,4 @@
-package http
+package gateway
 
 type CommonResponse struct {
 	Status int           `json:"status"`

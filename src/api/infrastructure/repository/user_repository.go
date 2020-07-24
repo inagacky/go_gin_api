@@ -3,7 +3,7 @@ package repository
 import (
 	"github.com/inagacky/go_gin_api/src/api/configure/db"
 	l "github.com/inagacky/go_gin_api/src/api/configure/logger"
-	m "github.com/inagacky/go_gin_api/src/api/domain/model"
+	m "github.com/inagacky/go_gin_api/src/api/domain/entity"
 	"github.com/jinzhu/gorm"
 	"strconv"
 	"time"
