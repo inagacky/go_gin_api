@@ -9,8 +9,6 @@
 `GORM`
 ### ログライブラリ
 `go.uber.org/zap`
-### パッケージ管理ツール
-`dep`
 ### その他
 `Docker`
 ### DIコンテナ
