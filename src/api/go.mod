@@ -1,4 +1,4 @@
-module github.com/inagacky/go_gin_api
+module github.com/inagacky/go_gin_api/src/api
 
 go 1.14
 
