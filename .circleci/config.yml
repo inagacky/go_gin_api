@@ -15,8 +15,7 @@ jobs:
       - run:
           name: Install Package
           command: |
-            go get -u github.com/golang/dep/cmd/dep
-            dep ensure
+            go mod tidy
             go get github.com/jstemmer/go-junit-report
           working_directory: /home/circleci/go/src/github.com/inagacky/go_gin_api/src/api
       - run:
